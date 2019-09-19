@@ -1,0 +1,14 @@
+#memory 0번지에 숫자 저장하기
+memory[0]->0
+
+
+#memory 0번지에 들어 있는 값을 1만큼 증가시키기
+memory[0]->memory[0]+1
+
+memory[1]->5000
+memory[2]->50
+
+#memory에 들어있는값을 참조하여 점찍기
+memory[60000 + memory[1]+memory[2]]->999999
+
+
