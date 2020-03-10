@@ -1,0 +1,11 @@
+
+fillWindow()
+
+
+
+def fillWindow()
+	number->0
+	while number < 10000
+		memory[60000+number]->999999
+		number -> number + 1
+
