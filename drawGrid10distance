@@ -1,0 +1,35 @@
+memory[55001]->1
+
+
+#---세로선긋기를 여러번 반복한다.----
+memory[1]->0 #가로번호
+
+#가로로 이동하기
+while memory[1]<100
+	memory[0]->0 #세로번호
+
+	#세로선긋기
+	while memory[0]<10000
+		memory[60000+memory[0]+memory[1]]->999999
+		memory[0]->memory[0]+100
+
+	memory[1]->memory[1]+10
+
+
+#---가로선긋기를 여러번 반복한다.----
+memory[1]->0 #세로번호
+
+#세로로 이동하기
+while memory[1]<10000
+	memory[0]->0 #가로번호
+
+	#가로선긋기
+	while memory[0]<100
+		memory[60000+memory[0]+memory[1]]->999999
+		memory[0]->memory[0]+1
+
+	memory[1]->memory[1]+1000
+
+memory[55000]->1
+
+
