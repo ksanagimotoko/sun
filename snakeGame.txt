@@ -1,0 +1,73 @@
+﻿
+#프로그램이 시작하자 마자 현재 좌표를 저장한다.
+
+#시간이 흘러 방향에 따라 다음 좌표를 그 다음 메모리에 저장한다.
+# 맨마지막에 저장된 좌표가 headX,headY가 된다.
+#head가 결정되고 나서 사과와 닿았다면 몸통의 길이를 1늘린다.
+
+
+#계속계속해서 메모리에 좌표를 저장해 나간다.
+
+#몸통의 길이에 따라 tailX, tailY가 정해진다.
+
+#그리기
+사과와 닿았을 때는 궂이 tailX,tailY위치를 화면에서 지울 필요가 없다.
+즉, 사과와 닿지 않았을 때만 지운다.
+
+
+#핵심
+	#몸통을 1늘리는 것과 화면에서 꼬리를 지우는 일은 서로 배반관계이다.
+
+
+
+x->50
+y->50
+count->0
+direction->1
+tailX->0
+tailY->0
+
+length->2
+index -> 0
+memory[100+index]->x
+memory[100+index+1]->y
+
+headX->x
+headY->y
+
+while 1
+
+	memory[60000+(headY*100)+headX]->999999
+
+	
+	count -> count +1
+	if count>5
+
+		if direction = 1
+			#좌표증가
+			x->x+1
+			if(x=80)
+				length->length+2
+
+			#새로운 좌표 저장
+			index->index+2
+			memory[100+index]->x
+			memory[100+index+1]->y
+
+			#HEAD 재설정
+			headX->x
+			headY->y
+
+			tailX-> memory[100+index-length]
+			tailY-> memory[100+index+1-length]
+					
+		count->0
+
+	#사과를 먹지 않았을 때만 꼬리를 지운다.		
+	if(headX != 80)		
+		memory[60000+(tailY*100)+tailX]->0
+
+
+	
+	
+	
