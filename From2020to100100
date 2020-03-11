@@ -1,0 +1,21 @@
+
+point20by20(1,1)
+point20by20(2,1)
+
+
+
+
+
+def point20by20(y, x)
+
+	#100by100좌표로 변환
+	y->y*5
+	x->x*5
+
+	#시리얼번호로 변환
+	position -> 60000+(y*100)+x
+
+	#점그리기
+	memory[position]->999999	
+	
+	
