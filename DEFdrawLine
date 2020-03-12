@@ -1,5 +1,9 @@
 
 def drawLine(direction,yo,xo,length,color) #100X100
+
+	#xo번호 부터 그리기 시작
+	#yo번호 부터 그리기 시작
+	
 	if direction = 1 #vertical
 		y->0
 		while y<length
