@@ -1,0 +1,27 @@
+memory[55001]->1
+
+x->48
+y->48
+
+while 0<1
+	y->y-memory[50004]+memory[50005]
+	x->x-memory[50006]+memory[50007]
+
+	drawSquare(y,x,999999) #100x100좌표계
+	memory[55000]->1
+	drawSquare(y,x,0)
+	
+
+
+def drawSquare(yo,xo,color)
+	y->0	
+	while y<4
+		x->0
+		while x<4
+			memory[60000+((yo+y)*100)+xo+x]->color
+			x->x+1
+		y->y+1
+
+
+
+
