@@ -1,0 +1,14 @@
+
+def drawLine(direction,yo,xo,length,color) #100X100
+	if direction = 1 #vertical
+		y->0
+		while y<length
+			memory[60000+((yo+y)*100)+xo]->color
+			y->y+1
+
+	if direction =0 #horizen
+		yo->yo*100
+		x->0
+		while x<length
+			memory[60000+yo+xo+x]->color
+			x->x+1
