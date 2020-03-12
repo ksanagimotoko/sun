@@ -1,0 +1,43 @@
+memory[55001]->1
+
+y->0
+prc->0 #program running count
+
+while y<97
+
+	prc->prc+1
+
+	#화면에 빨간색 사각형 그리기
+	drawSquare(y,50,999999)
+	
+	#화면에 보이기
+	memory[55000]->1
+
+	#검은색으로 칠하기
+	drawSquare(y,50,0)
+
+	if prc>4
+
+	#점의 위치 변경하기
+		y->y+1
+		prc->0
+	
+
+
+def drawSquare(yo,xo,color)
+	y->0
+	while y<4
+		
+		#가로4칸칠하기
+		x->0
+		while x<4
+			memory[60000+((yo+y)*100)+xo+x]->color
+			x->x+1
+		y->y+1
+
+
+
+
+
+#마지막 점이 보이도록 무한반복 실행
+while 0<1
