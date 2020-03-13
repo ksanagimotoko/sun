@@ -1,0 +1,31 @@
+memory[55001]->1
+
+
+
+drawGrid(10)
+
+
+
+
+def drawGrid(n)
+	offset -> 100/n
+
+	y->0
+	while y<100
+		x->0
+		while x<100
+			memory[60000+(y*100)+x]->999999
+			x->x+1
+		y->y+offset
+
+
+	x->0
+	while x<100
+		y->0
+		while y<100
+			memory[60000+(y*100)+x]->999999
+			y->y+1
+		x->x+offset
+
+
+
