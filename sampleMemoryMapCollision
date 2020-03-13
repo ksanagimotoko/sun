@@ -1,0 +1,101 @@
+memory[55001]->1
+
+
+y->5
+x->5
+
+drawBoard()
+drawGrid(10)
+
+oldRkey->0
+
+while 0<1
+	
+	#화면 조정하기
+	drawSquare(y,x,990000)
+	drawGrid(10)
+	memory[55000]->1
+	drawSquare(y,x,000000)
+
+	#키보드 조정하기
+	newRkey -> memory[50007]
+	x->x+(newRkey*(1-oldRkey))
+	if checkCollision(y,x)
+		x->x-1
+	oldRkey->newRkey
+
+
+	
+
+def checkCollision(y,x)
+	out->memory[100+(y*10)+x]
+
+def memoryMap(y,x,value)
+	memory[100+(y*10)+x]->value
+
+
+
+def drawGrid(n)
+	offset -> 100/n
+
+	y->0
+	while y<100
+		x->0
+		while x<100
+			memory[60000+(y*100)+x]->999999
+			x->x+1
+		y->y+offset
+
+
+	x->0
+	while x<100
+		y->0
+		while y<100
+			memory[60000+(y*100)+x]->999999
+			y->y+1
+		x->x+offset
+
+
+
+def drawSquare(yo,xo,color)
+	yo->yo*10
+	xo->xo*10
+
+	y->0
+	while y<10
+		x->0
+		while x<10
+			memory[60000+((yo+y)*100)+xo+x]->color
+			x->x+1
+		y->y+1
+
+
+
+def drawBoard()
+	x->0
+	while x<10
+		drawSquare(0,x,555555)
+		memoryMap(0,x,1)
+		x->x+1
+
+	x->0
+	while x<10
+		drawSquare(9,x,555555)
+		memoryMap(9,x,1)
+		x->x+1
+
+
+	y->0
+	while y<10
+		drawSquare(y,0,555555)
+		memoryMap(y,0,1)
+		y->y+1
+	y->0
+	while y<10
+		drawSquare(y,9,555555)
+		memoryMap(y,9,1)
+		y->y+1
+
+	drawSquare(5,7,555555)
+	memoryMap(5,7,1)
+
