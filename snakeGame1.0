@@ -1,0 +1,135 @@
+memory[55001]->1
+
+
+direction->1 #0123 시계방향
+
+tail->1
+
+memory[100]->6
+memory[1000]->5
+memory[100+tail]->5
+memory[1000+tail]->5
+
+drawSquare(memory[1000],memory[100],009900)
+drawSquare(memory[1001],memory[101],009900)
+x->6
+y->5
+
+berryx->10
+berryy->5
+
+drawSquare(berryy,berryx,990000)
+
+drawGrid(20)
+prc->0 #program running count
+
+while 0<1
+
+	
+		
+	#키보드로 방향 조정하기
+	if memory[50004]#up
+		direction->0 
+	if memory[50005]#down
+		direction->2
+	if memory[50006]#left
+		direction->3
+	if memory[50007]#right
+		direction->1
+
+	if prc>40
+
+		if direction = 0 #up
+			y->y-1
+
+		if direction = 1 #right
+			x-> x+1
+
+		if direction = 2 #down
+			 y-> y+1
+
+		if direction =3 #left
+			 x-> x-1
+		
+		
+		#새로운 위치에 draw
+		drawSquare(y,x,009900)
+
+
+		if ((y!=berryy) + (x!=berryx))
+			#꼬리를 지우고
+			drawSquare(memory[1000+tail],memory[100+tail],0)
+
+
+		if ((y=berryy) * (x=berryx))
+			tail->tail+1
+			
+
+		#데이타이동 (현재 snake의 상태)
+		moveData(y,x,tail)
+		prc->0
+
+
+		drawGrid(20)
+	
+
+	
+	prc->prc+1	#프로그램 카운트 증가
+	memory[55000]->1
+
+def moveData(newy, newx, t)
+	
+	i->t	
+
+	while i>0
+		memory[100+i]->memory[100+i-1]
+		memory[1000+i]->memory[1000+i-1]
+		i->i-1
+
+
+	memory[100]->newx
+	memory[1000]->newy
+
+	
+	
+	
+
+def checkCollision(y,x)
+	out->memory[100+(y*20)+x]
+
+
+def drawGrid(n)
+	offset -> 100/n
+
+	y->0
+	while y<100
+		x->0
+		while x<100
+			memory[60000+(y*100)+x]->999999
+			x->x+1
+		y->y+offset
+
+
+	x->0
+	while x<100
+		y->0
+		while y<100
+			memory[60000+(y*100)+x]->999999
+			y->y+1
+		x->x+offset
+
+
+
+def drawSquare(yo,xo,color)
+	yo->yo*5
+	xo->xo*5
+
+	y->0
+	while y<5
+		x->0
+		while x<5
+			memory[60000+((yo+y)*100)+xo+x]->color
+			x->x+1
+		y->y+1
+
+
