@@ -1,0 +1,128 @@
+
+
+memory[55001]->1
+
+drawWall()
+drawWallToEraseRow()
+
+#떨어지는 사각형의 좌표
+x->5
+y->0
+
+prc->0
+
+while 0<1
+
+	drawRec(y,x,990000) #메모리에 빨간색 사각형 그리기
+	memory[55000]->1	#화면에 보이기
+	drawRec(y,x,000000) #같은위치에 빨간색 사각형 지우기
+
+	if prc>4
+		prc->0
+		y->y+1
+		#이동한 좌표가 벽인지 아닌지 확인합니다.
+		if checkWall(y,x) #만약 벽이라면 
+			y->y-1
+			#쌓기
+			drawRec(y,x,999999)
+			memoryMap(y,x,1)
+
+			#행이 모두 채워졌는지 확인하기
+			if isFilledRow(y)
+				
+				#행을 아래로 옮기기
+				downRows(y)
+
+
+			#떨어지는 사각형을 맨 위로 올립니다.
+			y->0
+		
+
+	prc->prc+1
+
+
+def downRows(yo)	
+	while yo>0
+		
+		x->1
+		while x<11
+			memoryMap(yo,x,0) #꽉찬행의 열을 차례대로 비우고
+			drawRec(yo,x,000000) #검은색으로 채우고
+			if checkWall(yo-1,x) #만약 윗행에 wall이 있다면
+				memoryMap(yo,x,1)
+				drawRec(yo,x,999999)
+			x->x+1		
+
+		yo->yo-1
+	memory[55000]->1
+	
+
+
+
+
+def isFilledRow(yo)
+	wall->1
+	x->1
+	while x<11
+		wall->wall*checkWall(yo,x)
+		x->x+1
+	out->wall
+
+
+
+def checkWall(yo,xo)
+	out-> memory[100+(yo*12)+xo]
+
+
+def memoryMap(yo,xo,value)
+	memory[100+(yo*12)+xo]->value
+
+
+
+#4x4사각형을 그리는 함수
+def drawRec(yo,xo,color)
+	xo->xo*5
+	yo->yo*5
+
+	y->0
+	while y<4
+		x->0
+		while x<4
+			memory[60000+((yo+y)*100)+xo+x]->color
+			x->x+1
+		y->y+1
+
+
+# 사각형함수를 이용하여 벽과 바닥을 그림
+def drawWall()
+	y->0
+
+	while y<20
+		drawRec(y,0,555555)
+		memoryMap(y,0,1)
+		drawRec(y,11,555555)
+		memoryMap(y,11,1)
+		y->y+1
+
+	x->1
+	while x<11
+		drawRec(19,x,555555)
+		memoryMap(19,x,1)
+		x->x+1
+
+	
+def drawWallToEraseRow()
+	y->18
+	while y>0	
+		x->1
+		while x < 11
+			if x!=5
+				drawRec(y,x,999999)
+				memoryMap(y,x,1)
+			x->x+1
+		y->y-1
+
+		
+
+	
+	
