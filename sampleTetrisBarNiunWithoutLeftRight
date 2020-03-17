@@ -1,0 +1,262 @@
+
+#기본 셋팅
+memory[55001]->1
+shapeDesign()
+drawWall()
+
+memory[55000]->1
+
+# 기본블록의 제어
+x->5 
+y->1
+rN->0 #rotation Number
+prc->0
+shape->1
+
+oUk-> memory[50004] #old Upper Key
+
+
+# 프로그램이 끝나지 않도록 무한반복
+while 0<1
+
+	#key
+	nUk -> memory[50004]
+	rN->rN+(nUk*(1-oUk))
+	if rN>3
+		rN->0
+
+
+	if checkWall(y,x,rN,shape)
+		rN->rN-1
+	oUk->nUk
+
+
+
+	if prc>20
+		y->y+1
+		if checkWall(y,x,rN,shape)
+			y->y-1
+			stackAndErase(y,x,rN,shape)
+			y->1
+			rN->0
+			shape->1-shape
+		prc->0
+
+	prc->prc+1
+	
+	showBlocks(y,x,rN,shape) #회전번호 추가
+
+	
+
+
+
+
+
+	
+
+
+
+#------- 프로그램에 필요한 함수들 --------
+
+
+def erase()
+	y->1
+	while y<19
+
+		#행이 꽉 찼는지를 검사
+		filled->1
+		x->1
+		while x<11
+			filled->filled*(memory[100+(y*12)+x])
+			x->x+1
+
+		#만약 꽉 찼다면
+		if filled 
+			x->1
+			while x<11
+				memory[100+(y*12)+x]->0
+				drawRec(y,x,000000)
+				x->x+1
+			#윗 블록 아래로 내리기
+			moveUpperBlocks(y)
+
+
+		y->y+1
+
+
+def moveUpperBlocks(yo)
+	y->yo-1 #꽉찬행의 윗 행
+	while y>0
+		x->1
+		while x<11
+			if memory[100+(y*12)+x]		#윗 행에 블록이 있다면
+				memory[100+(y*12)+x]->0 #윗 행을 비우고
+				drawRec(y,x,0)
+				stack(y+1,x)		#아래 행에 쌓는다.
+			x->x+1
+		y->y-1
+
+
+
+
+def stackAndErase(yo,xo,rN,s)
+	positionOfBlocks(yo,xo,rN,s)
+	stack(memory[0],memory[1])
+	stack(memory[2],memory[3])
+	stack(memory[4],memory[5])
+	erase()
+
+
+
+
+
+
+
+def stack(yo, xo)
+	memory[100+(yo*12)+xo]->1  	#memeoryMap을 1로설정
+	drawRec(yo,xo,999999)		#쌓인상태를 보여주는 사각형 그리기
+
+
+
+
+def showBlocks(yo,xo,rN,s) #rotation Number
+	positionOfBlocks(yo,xo,rN,s) #화면에 그려주기 전에 위치계산하기
+	drawRec(memory[0],memory[1],999999)
+	drawRec(memory[2],memory[3],990000)
+	drawRec(memory[4],memory[5],990000)
+	memory[55000]->1
+	drawRec(memory[0],memory[1],000000)
+	drawRec(memory[2],memory[3],000000)
+	drawRec(memory[4],memory[5],000000)
+	
+
+
+
+
+
+def shapeDesign()
+	# '막대세세운모양'
+	memory[500]->-1
+	memory[501]->0
+	memory[502]->1
+	memory[503]->0
+
+	memory[504]->0
+	memory[505]->-1
+	memory[506]->0
+	memory[507]->1
+
+	memory[508]->-1
+	memory[509]->0
+	memory[510]->1
+	memory[511]->0
+
+	memory[512]->0
+	memory[513]->-1
+	memory[514]->0
+	memory[515]->1
+
+	#ㄴ 자 모양
+	memory[516]->-1
+	memory[517]->0
+	memory[518]->0
+	memory[519]->1
+
+	memory[520]->0
+	memory[521]->1
+	memory[522]->1
+	memory[523]->0
+
+	memory[524]->1
+	memory[525]->0
+	memory[526]->0
+	memory[527]->-1
+
+	memory[528]->0
+	memory[529]->-1
+	memory[530]->1
+	memory[531]->0
+
+
+	
+
+
+
+
+def positionOfBlocks(y,x,rN,s) #shape 추가
+	#기준블록의 위치(y,x)를 이용하여 상대블록들의 위치를 계산하여 
+	#memory[0]~memory[5]에 저장합니다.
+
+	memory[0]->y
+	memory[1]->x
+	memory[2]->y+memory[500+(s*16)+(rN*4)+0]
+	memory[3]->x+memory[500+(s*16)+(rN*4)+1]
+	memory[4]->y+memory[500+(s*16)+(rN*4)+2]
+	memory[5]->x+memory[500+(s*16)+(rN*4)+3]
+
+
+
+
+
+
+
+def checkWall(yo,xo,rN,s)
+	positionOfBlocks(yo,xo,rN,s)
+	out->memory[100+(memory[0]*12)+memory[1]]+ 
+	     memory[100+(memory[2]*12)+memory[3]]+
+	     memory[100+(memory[4]*12)+memory[5]]
+
+
+
+
+
+
+
+def memoryMap(yo,xo,value)
+	memory[100+(yo*12)+xo]->value
+
+
+
+#4x4사각형을 그리는 함수
+def drawRec(yo,xo,color)
+	xo->xo*5
+	yo->yo*5
+
+	y->0
+	while y<4
+		x->0
+		while x<4
+			memory[60000+((yo+y)*100)+xo+x]->color
+			x->x+1
+		y->y+1
+
+
+# 사각형함수를 이용하여 벽과 바닥을 그림
+def drawWall()
+	y->0
+
+	while y<20
+		drawRec(y,0,555555)
+		memoryMap(y,0,1)
+		drawRec(y,11,555555)
+		memoryMap(y,11,1)
+		y->y+1
+
+	x->1
+	while x<11
+		drawRec(19,x,555555)
+		memoryMap(19,x,1)
+		x->x+1
+
+
+def drawWallToEraseRow()
+	y->18
+	while y>0	
+		x->1
+		while x < 11
+			if x!=5
+				drawRec(y,x,999999)
+				memoryMap(y,x,1)
+			x->x+1
+		y->y-1
+	
