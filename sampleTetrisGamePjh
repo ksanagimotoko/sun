@@ -1,0 +1,260 @@
+memory[55001]->1 #disable auto drawing
+
+#color
+
+
+saveShape(500,-1,0,0,1) #ㄴ
+saveShape(504,-1,0,1,0) #|
+
+drawBackground()
+eraseTestBackground()
+
+writeMemory0to5(1,5,1) #y, x, type
+memory[55000]->1
+
+oUk->memory[50004]
+oLk->memory[50006]
+oRk->memory[50007]
+
+prc->0 #programRunningCount
+
+while 1
+	#왼쪽이동
+	nLk->memory[50006]
+	if (oLk=0)*(nLk=1)
+		updateCoord(1,-1)
+	oLk->nLk
+	
+	#오른쪽이동
+	nRk->memory[50007]
+	if (oRk=0)*(nRk=1)
+		updateCoord(1,1)
+	oRk->nRk
+
+
+	#회전
+	nUk->memory[50004]
+	if (oUk=0)*(nUk=1)
+		updateCoord(2,1)
+	oUk->nUk
+	
+	#아래이동
+	if prc>10
+
+		updateCoord(3,1) 
+		prc->0
+
+
+	drawBlock()
+
+	prc->prc+1
+	
+	
+
+
+#--------- FUNCTIONS -------
+
+
+def erase()
+	y->1
+	while y<19
+		if isFilled(y)
+
+			#y를 기준으로 윗행 모두 내리기
+			dropAllSquare(y)
+			
+		y->y+1
+
+
+def dropAllSquare(yo)
+	#꽉찬행을 비운다
+	x->1
+	while x<11
+		memory[100+(yo*12)+x]->0
+		drawRec(yo,x,000000)
+		x->x+1
+	#꽉찬행부터 윗행을 모두 내린다.
+	while yo>0
+		dropUpperSquare(yo)
+		yo->yo-1
+
+	memory[55000]->1
+	
+
+
+
+
+def dropUpperSquare(yo)
+	#아래행은 모두 비어있는 상태에서 시작
+	#윗행을 copy하고 윗행을 비워버린다.
+	x->1
+	while x<11
+		if (memory[100+((yo-1)*12)+x]) #윗행이 차 있다면
+			memory[100+(yo*12)+x]->1 #아래행으로 복사
+			drawRec(yo,x,555555)
+			memory[100+((yo-1)*12)+x]->0 #복사하고 윗행을 비운다.
+			drawRec(yo-1,x,000000) #복사하고 윗행을 검게칠한다.
+		x->x+1
+		
+
+
+
+def isFilled(yo)
+	fill->1
+	x->1
+	while x<11
+		fill->fill*memory[100+(yo*12)+x]
+		x->x+1
+	out->fill
+
+
+
+def drawBlock()
+	i->0
+	while i<6
+		drawRec(memory[i],memory[i+1],990000)
+		i->i+2
+	
+	memory[55000]->1 #show on window
+	
+	i->0
+	while i<6
+		drawRec(memory[i],memory[i+1],000000)
+		i->i+2
+	
+	
+
+
+def updateCoord(type,diff)
+	#업데이트할 좌표를 미리 구해보고
+	#충돌이 나지 않을경우 새블록의 위치를 업데이트합니다.
+	memoryCopy() # m[10~15]->m[0~5]
+	
+	if type = 1
+		memory[11]->memory[11]+diff
+		memory[13]->memory[13]+diff
+		memory[15]->memory[15]+diff
+
+	if type = 2
+		#상대y좌표와 상대x좌표 바꾸기
+		i->2
+		while i<6
+			ry-> memory[10+i]-memory[10]
+			rx-> memory[10+i+1]-memory[11]
+
+			temp->rx
+			rx->ry
+			ry->(-1*temp)
+
+			memory[10+i]->memory[10]+ry
+			memory[10+i+1]->memory[11]+rx
+			i->i+2
+				
+		
+
+
+
+
+	if type=3
+		#y좌표 업데이트
+		memory[10]->memory[10]+1
+		memory[12]->memory[12]+1
+		memory[14]->memory[14]+1
+
+		if isCollide()
+			stack(memory[0],memory[1])
+			stack(memory[2],memory[3])
+			stack(memory[4],memory[5])
+
+			erase()
+
+			writeMemory0to5(1,5,1) #update m[0~5] to start new Block
+			
+
+	#충돌이 안 났을 때만 m[0~5]->m[10~15]
+	if (isCollide()=0)
+		i->0
+		while i<6
+			memory[i]->memory[10+i]
+			i->i+1
+
+
+def isCollide()
+	c->0
+	i->0
+	while i<6
+		c->c+memory[100+(memory[10+i]*12)+memory[10+i+1]]
+		i->i+2
+	out->c
+			
+
+
+def memoryCopy()
+	i->0
+	while i<6
+		memory[10+i]->memory[i]
+		i->i+1
+
+
+
+def writeMemory0to5(yo,xo,type)
+	memory[0]->yo
+	memory[1]->xo
+	memory[2]->yo+memory[500+(type*4)]
+	memory[3]->xo+memory[501+(type*4)]
+	memory[4]->yo+memory[502+(type*4)]
+	memory[5]->xo+memory[503+(type*4)]
+
+
+
+
+def drawBackground()
+	y->0
+	while y<19
+		stack(y,0)
+		stack(y,11)
+		y->y+1
+
+	x->0
+	while x<12
+		stack(19,x)
+		x->x+1
+
+
+def stack(yo,xo)
+	memory[100+(yo*12)+xo]->1
+	drawRec(yo,xo,555555)
+
+
+
+def drawRec(yo,xo,color)
+	yo->yo*5
+	xo->xo*5
+
+	y->0
+	while y<4
+		x->0
+		while x<4
+			memory[60000+((yo+y)*100)+xo+x]->color
+			x->x+1
+		y->y+1
+
+
+
+def saveShape(sn,y1,x1,y2,x2)
+	#sn is startNumber
+	memory[sn+0]->y1
+	memory[sn+1]->x1
+	memory[sn+2]->y2
+	memory[sn+3]->x2
+
+
+def eraseTestBackground()
+	y->10
+	while y<19
+		x->1
+		while x<11
+			if x !=5
+				stack(y,x)
+			x->x+1
+		y->y+1
