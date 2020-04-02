@@ -1,0 +1,13 @@
+
+def drawSquare(yo,xo,color)
+	yo->yo*5
+	xo->xo*5
+	y->0
+	while y<5
+		
+		#가로5칸칠하기
+		x->0
+		while x<5
+			memory[60000+((yo+y)*100)+xo+x]->color
+			x->x+1
+		y->y+1
